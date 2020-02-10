@@ -60,7 +60,13 @@ resource "aws_instance" "this" {
       virtual_name = lookup(ephemeral_block_device.value, "virtual_name", null)
     }
   }
-
+  
+  lifecycle {
+    ignore_changes = [ "ami", "user_data", "key_name" ]
+#     "private_ip", "root_block_device", "ebs_block_device"
+#     ignore_changes = var.lifecycle_ignore_changes
+  }
+  
   dynamic "network_interface" {
     for_each = var.network_interface
     content {
