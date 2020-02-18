@@ -1,3 +1,12 @@
+data "aws_ami" "latest" {
+  owners      = var.ami_owners
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["${var.etcd_ami_prefix}-*"]
+  }
+}
+
 locals {
   is_t_instance_type = replace(var.instance_type, "/^t[23]{1}\\..*$/", "1") == "1" ? true : false
 }
@@ -5,8 +14,8 @@ locals {
 resource "aws_instance" "this" {
   count = var.instance_count
 
-  ami              = var.ami
-  instance_type    = var.instance_type
+  ami              = var.ami == "last" ? data.aws_ami.latest.id : var.ami
+  instance_type    = lookup(var.etcd_instance_types, var.instance_type)
   user_data        = var.user_data
   user_data_base64 = var.user_data_base64
   subnet_id = length(var.network_interface) > 0 ? null : element(
@@ -60,13 +69,12 @@ resource "aws_instance" "this" {
       virtual_name = lookup(ephemeral_block_device.value, "virtual_name", null)
     }
   }
-  
+
   lifecycle {
-    ignore_changes = [ "ami", "user_data", "key_name" ]
-#     "private_ip", "root_block_device", "ebs_block_device"
-#     ignore_changes = var.lifecycle_ignore_changes
+    # "private_ip", "root_block_device", "ebs_block_device"
+    ignore_changes = [ami, user_data, key_name]
   }
-  
+
   dynamic "network_interface" {
     for_each = var.network_interface
     content {

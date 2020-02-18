@@ -10,10 +10,36 @@ variable "instance_count" {
 }
 
 variable "ami" {
-  description = "ID of AMI to use for the instance"
+  default     = "last"
   type        = string
+  description = "ID of AMI to use for the instance"
+}
+# если ami=last то ищет по ami_owners и etcd_ami_prefix
+variable "ami_owners" {
+  type    = list(string)
+  default = ["161831738826"]
 }
 
+variable "etcd_ami_prefix" {
+  type    = string
+  default = "centos-7-pke"
+}
+
+variable "etcd_instance_types" {
+  type = map
+  default = {
+    nano     = "t3.nano"
+    micro    = "t2.micro"
+    small    = "t3.small"
+    standart = "c5.large"
+    # big = ""
+  }
+}
+
+variable "lifecycle_ignore_changes" {
+  default = ["ami", "user_data", "key_name", "root_block_device", "ebs_block_device"]
+  # type    = list(string)
+}
 variable "placement_group" {
   description = "The Placement Group to start the instance in"
   type        = string
@@ -51,6 +77,7 @@ variable "instance_initiated_shutdown_behavior" {
 }
 
 variable "instance_type" {
+  default     = "micro"
   description = "The type of instance to start"
   type        = string
 }
