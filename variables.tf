@@ -1,3 +1,115 @@
+variable "conponent" {
+  description = "Component Name"
+  type        = string
+}
+
+variable "public_ip_type" {
+  description = "If true, the EC2 instance will have associated public IP address elastic|assotiation|none "
+  type        = string
+  default     = "assotiation"
+}
+
+variable "etcd_enabled" {
+  default = true
+  type    = bool
+}
+
+variable "k8s_enabled" {
+  default = false
+  type    = bool
+}
+
+variable "domain_name" {
+  default     = "none"
+  type        = string
+  description = "Domain Name for External Connection"
+}
+
+variable "node_exporter_enabled" {
+  default = false
+  type    = bool
+}
+
+variable "fluetbit_enabled" {
+  default = false
+  type    = bool
+}
+
+variable "lvm_enabled" {
+  default     = false
+  type        = bool
+  description = "Create LVM volume"
+}
+
+variable "etcd_recovery" {
+  default     = false
+  description = "Recovery ETCD CA from s3"
+}
+
+variable "etcd_lb_enabled" {
+  default     = false
+  type        = bool
+  description = "Enable Load Balance override DNS SRV"
+}
+
+variable "etcd_wait_first_node" {
+  default     = true
+  type        = bool
+  description = "wait start first etcd node"
+}
+
+variable "dns_zone_id" {
+  default     = "none"
+  type        = string
+  description = "Hosted Zone ID"
+}
+
+variable "remote_user" {
+  default     = "centos"
+  description = "User name to SSH connect"
+  type        = string
+}
+
+variable "pke_etcd_version" {
+  default     = "v0.1.0"
+  type        = string
+  description = "Version PKE Etcd"
+}
+
+variable "bucket_data" {
+  default     = "data"
+  type        = string
+  description = "Backup data s3 folder"
+}
+
+variable "etcd_provider" {
+  default = "aws"
+  type    = string
+}
+
+variable "root_volume_size" {
+  description = "Root Volume size"
+  type        = number
+  default     = 20
+}
+
+variable "volume_type" {
+  default = "gp2"
+  type    = string
+}
+
+variable "backup_count" {
+  default     = 1
+  type        = number
+  description = "Number service to install backups"
+}
+
+variable "backup_schedule" {
+  default = "*/10 * * * *"
+}
+
+variable "infra_key" {}
+# ---------- EC2 --------------
 variable "name" {
   description = "Name to be used on all resources as prefix"
   type        = string
@@ -166,12 +278,6 @@ variable "ipv6_addresses" {
   default     = null
 }
 
-variable "tags" {
-  description = "A mapping of tags to assign to the resource"
-  type        = map(string)
-  default     = {}
-}
-
 variable "volume_tags" {
   description = "A mapping of tags to assign to the devices created by the instance at launch time"
   type        = map(string)
@@ -211,6 +317,21 @@ variable "cpu_credits" {
 variable "use_num_suffix" {
   description = "Always append numerical suffix to instance name, even if instance_count is 1"
   type        = bool
-  default     = false
+  default     = true
 }
 
+# Global variable
+# variable "backend_region" {}
+variable "s3_bucket" {}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "cluster_name" {
+  description = "Name of the cluster"
+}
+# variable "region" {}
+variable "s3_region" {}
