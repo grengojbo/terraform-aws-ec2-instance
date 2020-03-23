@@ -20,6 +20,7 @@ etcd_recovery=${etcd_recovery}
 etcd_dns_srv_enabled=${etcd_dns_srv_enabled}
 etcd_lb_enabled=${etcd_lb_enabled}
 etcd_wait_first_node=${etcd_wait_first_node}
+is_last_kernel=${is_last_kernel}
 
 domain_name=${domain_name}
 domain_public=${domain_public}

@@ -54,12 +54,14 @@ locals {
     domain_public         = local.domain_public
     etcd_wait_first_node  = var.etcd_wait_first_node
     install_packages      = var.install_packages
+    is_last_kernel        = var.is_last_kernel
   }
 
   root_block_device = [
     {
-      volume_type = var.volume_type
-      volume_size = var.root_volume_size
+      delete_on_termination = true
+      volume_type           = var.volume_type
+      volume_size           = var.root_volume_size
     },
   ]
 }

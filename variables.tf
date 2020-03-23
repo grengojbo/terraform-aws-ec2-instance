@@ -114,6 +114,19 @@ variable "backup_schedule" {
 }
 
 variable "infra_key" {}
+
+variable "fork_run" {
+  description = "Change for rerun"
+  type        = string
+  default     = "first"
+}
+
+variable "is_last_kernel" {
+  description = "Install Linux Kernel 5.X"
+  type        = bool
+  default     = false
+}
+
 # ---------- EC2 --------------
 variable "name" {
   description = "Name to be used on all resources as prefix"
