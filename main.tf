@@ -53,6 +53,7 @@ locals {
     domain_private        = local.domain_private
     domain_public         = local.domain_public
     etcd_wait_first_node  = var.etcd_wait_first_node
+    install_packages      = var.install_packages
   }
 
   root_block_device = [

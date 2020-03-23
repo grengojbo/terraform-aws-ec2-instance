@@ -19,6 +19,11 @@ variable "k8s_enabled" {
   type    = bool
 }
 
+variable "install_packages" {
+  default = true
+  type    = bool
+}
+
 variable "domain_name" {
   default     = "none"
   type        = string

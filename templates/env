@@ -7,6 +7,7 @@ LC_ALL=en_US.utf-8
 node_name=${node_name}
 etcd_cluster_name=${cluster_name}
 etcd_enabled=${etcd_enabled}
+install_packages=${install_packages}
 k8s_enabled=${k8s_enabled}
 pke_etcd_version=${pke_etcd_version}
 bucket_data=${bucket_data}

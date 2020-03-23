@@ -34,10 +34,10 @@ yum -y update
 yum -y install epel-release
 yum -y update
 
-yum -y install awscli wget jq vim
+yum -y install awscli wget jq vim ethtool ipset
 yum -y install htop mc
-# dbus-tools ethtool ipset
-# yum -y install realpath
+# No package fond
+# yum -y install realpath dbus-tools 
 
 # https://www.terraform.io/docs/configuration/expressions.html#string-templates
 %{ if lvm_enabled }

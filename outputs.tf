@@ -25,20 +25,126 @@
 #   value = local.user_data
 # }
 
-output "instantes" {
-  value = aws_instance.this
+# output "aa_instantes" {
+#   description = "Show All instance"
+#   value = aws_instance.this
+# }
+
+output "id" {
+  description = "List of IDs of instances"
+  value       = aws_instance.this.*.id
 }
 
-# -------- OLD -----------------
-# output "id" {
-#   description = "List of IDs of instances"
-#   value       = aws_instance.this.*.id
+output "arn" {
+  description = "List of ARNs of instances"
+  value       = aws_instance.this.*.arn
+}
+
+output "public_dns" {
+  description = "List of public DNS names assigned to the instances. For EC2-VPC, this is only available if you've enabled DNS hostnames for your VPC"
+  value       = aws_instance.this.*.public_dns
+}
+
+output "public_ip" {
+  description = "List of public IP addresses assigned to the instances, if applicable"
+  value       = aws_instance.this.*.public_ip
+}
+
+output "private_dns" {
+  description = "List of private DNS names assigned to the instances. Can only be used inside the Amazon EC2, and only available if you've enabled DNS hostnames for your VPC"
+  value       = aws_instance.this.*.private_dns
+}
+
+output "private_ip" {
+  description = "List of private IP addresses assigned to the instances"
+  value       = aws_instance.this.*.private_ip
+}
+
+output "instance_state" {
+  description = "List of instance states of instances"
+  value       = aws_instance.this.*.instance_state
+}
+
+output "backup_user_key" {
+  value = module.etcd_backup_user.this_iam_access_key_id
+}
+
+output "backup_user_secret" {
+  value = module.etcd_backup_user.this_iam_access_key_secret
+}
+
+output "backup" {
+  value = [
+    "export AWS_ACCESS_KEY_ID=${module.etcd_backup_user.this_iam_access_key_id}",
+    "export AWS_SECRET_ACCESS_KEY=${module.etcd_backup_user.this_iam_access_key_secret}"
+  ]
+}
+
+output "z_connects" {
+  description = "SSH connection to instance"
+  value       = [for s in aws_instance.this.*.public_dns : "ssh centos@${s}"]
+}
+
+# TODO: востаноыить то что нужно
+# output "result" {
+#   value = {
+#     dns = {
+#       srv = local.is_dns > 0 ? true : false
+#       lb  = local.is_lb > 0 ? true : false
+#     },
+#     records = {
+#       public  = "${local.hostname}.${local.domain_public}",
+#       privare = "${local.hostname}.${local.domain_private}"
+#     },
+#     privare = aws_route53_record.peers_private.*.name,
+#     public  = aws_route53_record.peers_public.*.name
+#   }
 # }
 
-# output "arn" {
-#   description = "List of ARNs of instances"
-#   value       = aws_instance.this.*.arn
+# output "route53" {
+#   value = aws_route53_record.peers_public.*.name
 # }
+# # output "vpc_security_group_ids" {
+# #   description = "List of VPC security group ids assigned to the instances"
+# #   value       = module.etcd.vpc_security_group_ids
+# # }
+
+# # output "root_block_device_volume_ids" {
+# #   description = "List of volume IDs of root block devices of instances"
+# #   value       = module.etcd.root_block_device_volume_ids
+# # }
+
+# # output "ebs_block_device_volume_ids" {
+# #   description = "List of volume IDs of EBS block devices of instances"
+# #   value       = module.etcd.ebs_block_device_volume_ids
+# # }
+
+# # output "tags" {
+# #   description = "List of tags"
+# #   value       = module.etcd.tags
+# # }
+
+# # output "placement_group" {
+# #   description = "List of placement group"
+# #   value       = module.etcd.placement_group
+# # }
+
+# # output "instance_id" {
+# #   description = "EC2 instance ID"
+# #   value       = module.etcd.id[0]
+# # }
+
+# # output "instance_public_dns" {
+# #   description = "Public DNS name assigned to the EC2 instance"
+# #   value       = module.etcd.public_dns[0]
+# # }
+
+# # output "credit_specification" {
+# #   description = "Credit specification of EC2 instance (empty list for not t2 instance types)"
+# #   value       = module.etcd.credit_specification
+# # }
+
+# -------- OLD -----------------
 
 # output "availability_zone" {
 #   description = "List of availability zones of instances"
@@ -60,16 +166,6 @@ output "instantes" {
 #   value       = aws_instance.this.*.password_data
 # }
 
-# output "public_dns" {
-#   description = "List of public DNS names assigned to the instances. For EC2-VPC, this is only available if you've enabled DNS hostnames for your VPC"
-#   value       = aws_instance.this.*.public_dns
-# }
-
-# output "public_ip" {
-#   description = "List of public IP addresses assigned to the instances, if applicable"
-#   value       = aws_instance.this.*.public_ip
-# }
-
 # output "ipv6_addresses" {
 #   description = "List of assigned IPv6 addresses of instances"
 #   value       = aws_instance.this.*.ipv6_addresses
@@ -78,16 +174,6 @@ output "instantes" {
 # output "primary_network_interface_id" {
 #   description = "List of IDs of the primary network interface of instances"
 #   value       = aws_instance.this.*.primary_network_interface_id
-# }
-
-# output "private_dns" {
-#   description = "List of private DNS names assigned to the instances. Can only be used inside the Amazon EC2, and only available if you've enabled DNS hostnames for your VPC"
-#   value       = aws_instance.this.*.private_dns
-# }
-
-# output "private_ip" {
-#   description = "List of private IP addresses assigned to the instances"
-#   value       = aws_instance.this.*.private_ip
 # }
 
 # output "security_groups" {
@@ -110,10 +196,6 @@ output "instantes" {
 #   value       = aws_instance.this.*.credit_specification
 # }
 
-# output "instance_state" {
-#   description = "List of instance states of instances"
-#   value       = aws_instance.this.*.instance_state
-# }
 
 # output "root_block_device_volume_ids" {
 #   description = "List of volume IDs of root block devices of instances"

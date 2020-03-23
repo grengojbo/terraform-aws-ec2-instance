@@ -1,5 +1,0 @@
-cacertpath: /etc/etcd/pki
-certpath: /etc/etcd/pki
-cacert: /etc/etcd/pki/ca.crt
-cert: /etc/etcd/pki/root.crt
-key: /etc/etcd/pki/root.key
