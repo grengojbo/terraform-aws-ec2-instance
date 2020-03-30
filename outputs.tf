@@ -65,21 +65,6 @@ output "instance_state" {
   value       = aws_instance.this.*.instance_state
 }
 
-output "backup_user_key" {
-  value = module.etcd_backup_user.this_iam_access_key_id
-}
-
-output "backup_user_secret" {
-  value = module.etcd_backup_user.this_iam_access_key_secret
-}
-
-output "backup" {
-  value = [
-    "export AWS_ACCESS_KEY_ID=${module.etcd_backup_user.this_iam_access_key_id}",
-    "export AWS_SECRET_ACCESS_KEY=${module.etcd_backup_user.this_iam_access_key_secret}"
-  ]
-}
-
 output "z_connects" {
   description = "SSH connection to instance"
   value       = [for s in aws_instance.this.*.public_dns : "ssh centos@${s}"]

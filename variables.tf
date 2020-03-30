@@ -1,6 +1,35 @@
-variable "conponent" {
+variable "component" {
   description = "Component Name"
   type        = string
+}
+
+variable "role" {
+  description = "Instance role"
+  type        = string
+  default     = "worker"
+}
+
+variable "tenant" {
+  description = "Auth User for kubernetes api server"
+  type        = string
+  default     = "none"
+}
+
+variable "master_mode" {
+  description = "Kubernetes Cluster MODE multi  OR single"
+  type        = string
+  default     = "multi"
+}
+
+variable "master_type_ip" {
+  default     = "public"
+  description = "Cluster API Public or Private IP"
+}
+
+variable "cert_storage" {
+  description = "Certificate Storage s3 OR vault (TODO: vault)"
+  type        = string
+  default     = "s3"
 }
 
 variable "public_ip_type" {
@@ -92,10 +121,15 @@ variable "etcd_provider" {
   type    = string
 }
 
+variable "k8s_provider" {
+  default = "aws"
+  type    = string
+}
+
 variable "root_volume_size" {
   description = "Root Volume size"
   type        = number
-  default     = 20
+  default     = 30
 }
 
 variable "volume_type" {
@@ -125,6 +159,24 @@ variable "is_last_kernel" {
   description = "Install Linux Kernel 5.X"
   type        = bool
   default     = false
+}
+
+variable "pkg_pke_url" {
+  description = "URL download PKE package"
+  type        = string
+  default     = "https://banzaicloud.com/downloads/pke/latest"
+}
+
+variable "etcd_public_ips" {
+  description = "IPs ETCD public instance"
+  type        = list(string)
+  default     = []
+}
+
+variable "etcd_private_ips" {
+  description = "IPs ETCD private instance"
+  type        = list(string)
+  default     = []
 }
 
 # ---------- EC2 --------------
@@ -350,6 +402,13 @@ variable "tags" {
 
 variable "cluster_name" {
   description = "Name of the cluster"
+  type        = string
+}
+
+variable "etcd_cluster_name" {
+  description = "Name of the cluster"
+  type        = string
+  default     = "etcd"
 }
 # variable "region" {}
 variable "s3_region" {}

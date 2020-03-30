@@ -1,16 +1,14 @@
-module "etcd_backup_user" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-user"
-  version                       = "~> 2.0"
-  name                          = "${var.cluster_name}_${var.name}_backup"
-  create_iam_user_login_profile = false
-  create_iam_access_key         = true
-  # force_destroy                 = true
-  # pgp_key = "keybase:test"
-  # password_reset_required = false
-}
+resource "aws_iam_role" "ec2" {
+  # count = var.etcd_enabled ? 1 : 0
+  name = "${var.component}-${var.cluster_name}-role"
+  # name  = "${var.component}-${var.cluster_name}-role"
 
-resource "aws_iam_role" "etcd" {
-  name = "etcd-${var.cluster_name}-role"
+  tags = merge(
+    {
+      "Name" = "${var.component}-${var.cluster_name}-role"
+    },
+    var.tags
+  )
 
   assume_role_policy = <<EOF
 {
@@ -30,9 +28,11 @@ EOF
 
 # #Add AWS Policies for Kubernetes
 
-resource "aws_iam_role_policy" "etcd" {
-  name = "etcd-${var.cluster_name}-police"
-  role = aws_iam_role.etcd.id
+resource "aws_iam_role_policy" "ec2" {
+  # count = var.etcd_enabled ? 1 : 0
+  name = "${var.component}-${var.cluster_name}-police"
+  # name  = "${var.component}-${var.cluster_name}-police"
+  role = aws_iam_role.ec2.id
 
   policy = templatefile("${path.module}/templates/ec2-police.json", {
     # modules/etcd_ec2/templates/ec2-police.json
@@ -41,22 +41,12 @@ resource "aws_iam_role_policy" "etcd" {
   })
 }
 
-resource "aws_iam_user_policy" "etcd_backup_user" {
-  name = "etcd-backup-user-police"
-  user = module.etcd_backup_user.this_iam_user_name
-
-  policy = templatefile("${path.module}/templates/s3-police.json", {
-    bucket           = "${var.s3_bucket}/data"
-    s3_bucket        = var.s3_bucket
-    s3_bucket_backup = local.s3_bucket_backup
-  })
-}
-
 # # #Create AWS Instance Profiles
 
-resource "aws_iam_instance_profile" "etcd" {
-  name = "etcd_${var.cluster_name}_profile"
-  role = aws_iam_role.etcd.name
+resource "aws_iam_instance_profile" "ec2" {
+  # count = var.etcd_enabled ? 1 : 0
+  name = "${var.component}-${var.cluster_name}-profile"
+  role = aws_iam_role.ec2.name
 }
 
 # resource "aws_iam_instance_profile" "kube-worker" {

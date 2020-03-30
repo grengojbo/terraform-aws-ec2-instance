@@ -16,9 +16,15 @@ locals {
   domain_public               = local.is_dns > 0 || local.is_lb > 0 ? var.domain_name : "none"
   domain_private              = local.is_dns > 0 || local.is_lb > 0 ? "${var.s3_region}.${var.domain_name}" : "none"
   is_t_instance_type          = replace(var.instance_type, "/^t[23]{1}\\..*$/", "1") == "1" ? true : false
-  iam_instance_profile        = var.conponent == "etcd" ? aws_iam_instance_profile.etcd.name : ""
   associate_public_ip_address = var.public_ip_type == "assotiation" ? true : null
   ellastic_ip                 = var.public_ip_type == "elastic" ? 1 : 0
+  etcd_cluster_name           = var.etcd_cluster_name
+  iam_instance_profile        = aws_iam_instance_profile.ec2.name
+  etcd_public_ips             = var.etcd_public_ips
+  etcd_private_ips            = var.etcd_private_ips
+  tenant                      = var.tenant == "none" ? var.cluster_name : var.tenant
+  # iam_instance_profile        = var.component == "etcd" ? aws_iam_instance_profile.ec2.name : ""
+  # etcd_cluster_name           = var.component == "etcd" ? var.cluster_name : var.etcd_cluster_name
 
   dev_show = {
     s3_bucket_backup            = local.s3_bucket_backup
@@ -43,6 +49,7 @@ locals {
     s3_region             = var.s3_region
     s3_bucket             = var.s3_bucket
     etcd_provider         = var.etcd_provider
+    k8s_provider          = var.k8s_provider
     domain_name           = var.domain_name
     node_exporter_enabled = var.node_exporter_enabled
     fluetbit_enabled      = var.fluetbit_enabled
@@ -91,7 +98,7 @@ resource "aws_instance" "this" {
   ebs_optimized = var.ebs_optimized
 
   dynamic "root_block_device" {
-    for_each = var.root_block_device
+    for_each = local.root_block_device
     content {
       delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
       encrypted             = lookup(root_block_device.value, "encrypted", null)
