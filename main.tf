@@ -17,11 +17,11 @@ locals {
   domain_private              = local.is_dns > 0 || local.is_lb > 0 ? "${var.s3_region}.${var.domain_name}" : "none"
   is_t_instance_type          = replace(var.instance_type, "/^t[23]{1}\\..*$/", "1") == "1" ? true : false
   associate_public_ip_address = var.public_ip_type == "assotiation" ? true : null
-  ellastic_ip                 = var.public_ip_type == "elastic" ? 1 : 0
+  ellastic_ip                 = var.public_ip_type == "elastic" ? length(var.eip_ids) : 0
   etcd_cluster_name           = var.etcd_cluster_name
   iam_instance_profile        = aws_iam_instance_profile.ec2.name
-  etcd_public_ips             = var.etcd_public_ips
-  etcd_private_ips            = var.etcd_private_ips
+  etcd_public_ips             = var.component == "etcd" ? (local.ellastic_ip > 0 ? var.eip_public_ips : aws_instance.this.*.public_ip) : ["TODO"]
+  etcd_private_ips            = var.component == "etcd" ? aws_instance.this.*.private_ip : var.etcd_private_ips
   tenant                      = var.tenant == "none" ? var.cluster_name : var.tenant
   # iam_instance_profile        = var.component == "etcd" ? aws_iam_instance_profile.ec2.name : ""
   # etcd_cluster_name           = var.component == "etcd" ? var.cluster_name : var.etcd_cluster_name

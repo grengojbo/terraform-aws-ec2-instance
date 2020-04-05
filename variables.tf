@@ -38,6 +38,18 @@ variable "public_ip_type" {
   default     = "assotiation"
 }
 
+variable "eip_ids" {
+  default     = []
+  type        = list(string)
+  description = "List IDs Elastic IP"
+}
+
+variable "eip_public_ips" {
+  default     = []
+  type        = list(string)
+  description = "List Public Elastic IP for ETCD cluster"
+}
+
 variable "etcd_enabled" {
   default = true
   type    = bool
