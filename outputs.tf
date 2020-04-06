@@ -70,6 +70,10 @@ output "z_connects" {
   value       = [for s in aws_instance.this.*.public_dns : "ssh centos@${s}"]
 }
 
+output "depended_on" {
+  value = null_resource.dependency_getter.*.id
+}
+
 # TODO: востаноыить то что нужно
 # output "result" {
 #   value = {

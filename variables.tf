@@ -230,6 +230,11 @@ variable "etcd_instance_types" {
   }
 }
 
+variable "dependencies" {
+  type    = list
+  default = []
+}
+
 variable "lifecycle_ignore_changes" {
   default = ["ami", "user_data", "key_name", "root_block_device", "ebs_block_device"]
   # type    = list(string)

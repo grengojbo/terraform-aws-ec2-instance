@@ -1,10 +1,43 @@
 
 locals {
   public_ips = local.ellastic_ip > 0 ? var.eip_public_ips : aws_instance.this.*.public_ip
+  sleep_restart_second = var.is_last_kernel ? 2 : 1
+}
+
+# resource "null_resource" "instance_restart" {
+#   count = length(aws_instance.this.*.id)
+#   provisioner "remote-exec" {
+#     # when = "create"
+
+#     inline = [
+#       "sudo shutdown -r +60",
+#       "echo 0",
+#     ]
+#     on_failure = "continue"
+    
+#     connection {
+#       type        = "ssh"
+#       user        = var.remote_user
+#       private_key = file(var.infra_key)
+#       host        = local.public_ips[count.index]
+#     }
+#   }
+# }
+
+resource "null_resource" "dependency_getter" {
+  count = length(aws_instance.this.*.id)
+  # triggers = {
+  #   change_public_ips    = join(",", local.public_ips[*])
+  # }
+  provisioner "local-exec" {
+    command = "sleep ${local.sleep_restart_second}; echo ${length(var.dependencies)}"
+  }
+  depends_on = [null_resource.instance_install, aws_instance.this]
 }
 
 resource "null_resource" "instance_install" {
   count = length(aws_instance.this.*.id)
+  depends_on  = [aws_instance.this]
 
   triggers = {
     # change_public_ips    = join(",", aws_eip.ec2.*.public_ip[*])
