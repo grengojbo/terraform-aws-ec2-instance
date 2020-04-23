@@ -74,9 +74,23 @@ output "depended_on" {
   value = null_resource.dependency_getter.*.id
 }
 
+output "eip_association" {
+  value = aws_eip_association.eip_assoc.*.id
+}
+
+output "eip" {
+  value = aws_eip_association.eip_assoc
+}
+
 # TODO: востаноыить то что нужно
-# output "result" {
+# output "z_result" {
 #   value = {
+#     dev = {
+#       is_dns = local.is_dns,
+#       is_lb = local.is_lb,
+#       domain_public = local.domain_public,
+#       domain_name = var.domain_name,
+#     },
 #     dns = {
 #       srv = local.is_dns > 0 ? true : false
 #       lb  = local.is_lb > 0 ? true : false
@@ -85,8 +99,8 @@ output "depended_on" {
 #       public  = "${local.hostname}.${local.domain_public}",
 #       privare = "${local.hostname}.${local.domain_private}"
 #     },
-#     privare = aws_route53_record.peers_private.*.name,
-#     public  = aws_route53_record.peers_public.*.name
+#     # privare = aws_route53_record.peers_private.*.name,
+#     # public  = aws_route53_record.peers_public.*.name
 #   }
 # }
 
